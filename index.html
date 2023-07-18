@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+
+<head>
+    <title>Bazar 2023</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.6.10/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta charset="UTF-8"> <!-- important to show special chars -->
+    <link rel="icon" type="image/png" href="./img/cart.png">
+    <link rel="stylesheet" href="index.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+
+<body>
+    <div id="app" style="display: none;">
+        <v-app>
+            <v-main id="main">
+                <v-container v-if="isLoading" class="align-center justify-center appContainer black" fluid fill-height>
+                    <v-sheet class="transparent" transition="fade-transition" width="182">
+                        <v-progress-linear indeterminate class="white" color="grey darken-3"></v-progress-linear>
+                    </v-sheet>
+                </v-container>
+                <v-container v-else class="px-5 py-0 grey lighten-2 d-flex flex-column align-center justify-space-between elevation-10 " fluid fill-height>
+                    <v-sheet class="transparent elevation-0" height="5%">
+
+                    </v-sheet>
+
+                    <v-sheet :class="'d-flex flex-column align-center justify-center rounded-lg transparent elevation-0' + (isMobile ? '' : ' pa-5')" :width="isMobile ? '100%':'95%'" max-width="1440"
+                        height="78%" max-height="1200">
+                        <!--
+                            <v-sheet v-if="isMobile" class="d-flex flex-column align-center transparent elevation-0">
+                                <v-sheet class="my-3 pa-3 text-center rounded-lg elevation-2 mx-auto" max-width="300">
+                                    PLEASE ROTATE YOUR DEVICE
+                                    <v-icon large color="grey darken-1"> mdi-phone-rotate-landscape </v-icon>
+                                </v-sheet>
+                                <v-sheet class="mt-10 text-center transparent grey--text text--darken-2" max-width="300">
+                                    
+                                </v-sheet>
+                            </v-sheet>
+                        -->
+
+                        <v-sheet class="transparent" width="100%" height="100%" min-width="340" min-height="200" style="position: relative;" max-width="1400">
+                            <v-sheet class="transparent" width="100%" height="100%" style="perspective: 5000px;">
+                                <v-sheet class="content-container rounded-lg elevation-10" id="content-container">
+                                    <v-sheet class="rounded-lg pa-1 d-flex flex-column justify-space-between" style="z-index: 9999; position:absolute; width: 100%; height: 100%;">
+                                        <v-sheet class="d-flex flex-row justify-space-between mt-2 mb-2 text-center text-h5 font-weight-bold" width="100%">
+                                            <v-sheet class="elevation-0" width="25"></v-sheet>
+                                            <v-sheet>
+                                                <v-icon large class="" color="grey darken-1"> mdi-cart </v-icon>
+                                                Bazar 2023
+                                            </v-sheet>
+                                            <v-sheet class="d-flex flex-row justify-center elevation-0" width="30">
+
+                                            </v-sheet>
+                                        </v-sheet>
+                                        <v-sheet class="d-flex flex-wrap justify-space-around overflow-y-auto elevation-0" :height="'100%'">
+                                            <v-sheet class="d-flex flex-wrap justify-space-around overflow-y-auto" height="97%" style="z-index: 999999;">
+                                                <v-sheet v-for="project in items" key="tech.name" class="elevation-2 mx-3 mt-4 mb-8 rounded-lg pa-1 grey lighten-2" min-width="300" max-width="390"
+                                                    width="100%" height="460">
+                                                    <v-sheet class="mt-1 text-center text-h6 transparent grey--text text--darken-3"> {{project.name}}</v-sheet>
+                                                    <v-sheet class="mt-0 mb-n1 text-center text-subtitle-1 transparent grey--text text--darken-2"> R$ {{project.price}},00 ▪ {{project.condition}}
+                                                    </v-sheet>
+                                                    <v-sheet class="ma-1 d-flex justify-center align-center rounded-lg transparent px-3" height="250">
+                                                        <img class="rounded item-img" :src="'./img/items/'+project.img" alt="project screenshot" height="95%">
+                                                    </v-sheet>
+                                                    <v-sheet class="mt-0 mb-0 px-2 d-flex justify-center align-center text-center transparent elevation-0" width="100%" height="75">
+                                                        {{project.description}}
+                                                    </v-sheet>
+                                                    <v-sheet class="my-1 pa-0 d-flex align-center justify-center transparent elevation-0" height="36">
+                                                        <v-tooltip v-if="project.language && project.urlLabel" top>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <span class="mb-1 mx-1 elevation-0" v-bind="attrs" v-on="on">
+                                                                    <v-sheet class="mx-1 rounded transparent">
+                                                                        <a :href="project.url" target="_blank">{{project.urlLabel}}</a>
+                                                                        <sup class="font-weight-bold">{{project.languageSymbol}}</sup>
+                                                                    </v-sheet>
+                                                                </span>
+                                                            </template>
+                                                            <v-sheet class="transparent white--text">
+                                                                Language: <span v-html="project.language"></span>
+                                                            </v-sheet>
+                                                        </v-tooltip>
+                                                        <v-tooltip v-if="project.githubRepoURL" top>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <span class="ma-1 mx-1 elevation-0" v-bind="attrs" v-on="on">
+                                                                    <a :href="project.githubRepoURL" target="_blank" style="text-decoration: none">
+                                                                        <v-sheet class="ml-1 rounded transparent">
+                                                                            <v-icon color="black darken-1" large>mdi-github</v-icon>
+                                                                        </v-sheet>
+                                                                    </a>
+                                                                </span>
+                                                            </template>
+                                                            GitHub repository
+                                                        </v-tooltip>
+                                                        <v-tooltip v-if="project.olx_url" top>
+                                                            <template v-slot:activator="{ on, attrs }">
+                                                                <span class="ma-1 mx-1 elevation-0" v-bind="attrs" v-on="on">
+                                                                    <a :href="project.olx_url" target="_blank" style="text-decoration: none">
+                                                                        <v-sheet class="ml-1 rounded transparent">
+                                                                            <v-sheet class="ma-1 d-flex justify-center align-center rounded-lg transparent px-3" height="27">
+                                                                                <img class="rounded" :src="'./img/olx-logo.png'" alt="project screenshot" height="27">
+                                                                            </v-sheet>
+                                                                        </v-sheet>
+                                                                    </a>
+                                                                </span>
+                                                            </template>
+                                                            Anúncio na OLX com mais detalhes.
+                                                        </v-tooltip>
+                                                    </v-sheet>
+                                                    <v-sheet class="my-0 pa-0 transparent d-flex flex-column justify-center align-center elevation-0" height="70">
+                                                        <v-sheet class="d-flex flex-wrap justify-center text-subtitle-2 transparent">
+                                                            <v-sheet v-for="tech in project.techsNamesToShowTag" key="tech"
+                                                                class="elevation-1 mx-1 mb-1 rounded-lg px-1 grey darken-2 white--text text-subtitle-2 font-weight-light">
+                                                                {{tech}}
+                                                            </v-sheet>
+                                                        </v-sheet>
+                                                    </v-sheet>
+                                                </v-sheet>
+                                            </v-sheet>
+                                        </v-sheet>
+
+                                        <v-sheet class="transparent" height="5"></v-sheet>
+
+                                        <v-sheet>
+                                        </v-sheet>
+                                    </v-sheet>
+
+                                </v-sheet>
+
+                            </v-sheet>
+                        </v-sheet>
+                    </v-sheet>
+                    <v-sheet class="d-flex flex-column justify-end transparent elevation-0" height="5%" max-width="1200">
+                        <v-hover v-slot="{ hover }">
+                            <v-sheet class="rounded-t-lg elevation-5">
+                                <v-sheet v-if="hover" class="px-3 pt-2 text-wrap text-center text-caption text--secondary transparent">
+                                    Responsive web page built from scratch with <b>VUE.JS</b>, using <b>JAVASCRIPT</b>, <b>HTML</b> and <b>CSS</b>.
+                                    In addition, to faster and beauty design I used <b>VUETIFY</b> UI library and some <b>MATERIAL DESIGN ICONS</b>.
+                                    Hosted in a Linux <b>UBUNTU</b> dedicated server at <b>DIGITALOCEAN</b> cloud infrastructure. Version control by
+                                    <b>GIT</b> and <b>GITHUB</b>. Reverse proxy with <b>NGINX</b>. <b>SSL</b> certification with <b>CERTBOT</b> |
+                                    screen: {{$vuetify.breakpoint.width}}x{{$vuetify.breakpoint.height}} | isMobile: {{isMobileLastStatus}}
+                                </v-sheet>
+                                <v-sheet class="pa-3 transparent">
+                                    <v-sheet class="text-caption text-center"> 2023 <a href="https://github.com/jvictorjs" target="_blank">@jvictorjs</a>
+                                    </v-sheet>
+                                </v-sheet>
+                            </v-sheet>
+                        </v-hover>
+                    </v-sheet>
+                </v-container>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.6.10/dist/vuetify.js"></script>
+    <script type="module">
+
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+
+            data() {
+                return {
+                    devSettings: {
+                        isProductionMode: true,
+                        isShowUsefulLinks: false,
+                    },
+                    isMobileLastStatus: true,
+                    isLoading: true,
+                    minimumScreenWidth: 500,
+                    minimumScreenHeight: 500,
+                    items: [
+                        { name: 'Fone Sennhieser HD 206', description: 'Fone Sennhieser HD 206 Fio longo 3 metros', price: '150', condition: 'ótimo estado', img: "fone.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/audio-tv-video-e-fotografia/fone-sennhieser-hd206-fio-longo-3-metros-otimo-estado-1211055648?' },
+                        { name: 'Rede telada', description: 'Rede de descanso (telada). Cor azul.', price: '90', condition: 'excelente estado', img: "rede.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/utilidades-domesticas/rede-de-descanso-dormir-telada-1211056407?' },
+                        { name: 'Mesa Kappesberg F150', description: 'Mesa Escritório Kappesberg F150 - Carvalho Munique', price: '380', condition: 'ótimo estado', img: "mesa.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/moveis/mesa-escritorio-kappesberg-f150-carvalho-munique-otimo-estado-1211067523?' },
+                        { name: 'Jump profissional reforçado', description: 'Jump profissional com aro reforçado (pula pula)', price: '130', condition: 'ótimo estado', img: "jump.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/esportes-e-ginastica/jump-profissional-com-aro-reforcado-pula-pula-1211065387?' },
+                        { name: 'Suporte teclado/mouse PC/Leitura', description: 'Suporte teclado e mouse para cama ou sofá. Madeira com acabamento na cor preta. Pouco uso.', price: '140', condition: 'ótimo estado', img: "mesa-suporte-maior-preta.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/moveis/mesa-apoio-suporte-para-teclado-e-mouse-cama-sofa-gamer-1211063898?' },
+                        { name: 'Suporte para leitura/notebook', description: 'Mesa de apoio suporte para Leitura com prendedor de páginas (livros, notebook). Praticamente novo.', price: '120', condition: 'ótimo estado', img: "mesa-suporte-menor.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/moveis/mesa-de-apoio-suporte-para-leitura-com-prendedor-de-paginas-livros-notebook-1211059948?' },
+                        { name: 'Mini Bicicleta Ergométrica', description: 'Mini Bike Ergométrica Simulador Pedalada Cicloergômetro - bom estado', price: '150', condition: 'bom estado', img: "mini-bike.jpg", olx_url: 'https://df.olx.com.br/distrito-federal-e-regiao/esportes-e-ginastica/mini-bike-ergometrica-simulador-pedalada-cicloergometro-bom-estado-1211068991?' },
+                    ]
+                }
+            },
+            created() {
+                console.log('created ' + new Date());
+            },
+            mounted() {
+                console.log('mounted ' + new Date())
+                setTimeout(() => {
+                    document.querySelector('#app').style.display = 'inline'
+                    setTimeout(() => {
+                        this.isLoading = false
+                    }, 2300);
+                }, 300);
+            },
+            watch: {
+                // whenever newIsMobileLastStatus changes, this function will run
+                isMobileLastStatus(newIsMobileLastStatus, oldIsMobileLastStatus) {
+                    console.log('isMobile changed to', newIsMobileLastStatus)
+                }
+            },
+            computed: {
+                isMobile() {
+                    console.log('isMobile computed = ' + this.$vuetify.breakpoint.width + 'x' + this.$vuetify.breakpoint.height)
+                    const isCurrentMobile = this.$vuetify.breakpoint.width < this.minimumScreenWidth || this.$vuetify.breakpoint.height < this.minimumScreenHeight;
+                    this.isMobileLastStatus = isCurrentMobile
+                    return isCurrentMobile
+                }
+            },
+            methods: {
+            }
+        })
+
+    </script>
+</body>
+
+</html>
